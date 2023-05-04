@@ -1,5 +1,5 @@
 import Test.HUnit
-import Solucion
+import iap1-tp.hs
 
 main = runTestTT tests
 

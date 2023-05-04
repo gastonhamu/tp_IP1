@@ -37,17 +37,34 @@ likesDePublicacion (_, _, us) = us
 -- Ejercicios
 
 nombresDeUsuarios :: RedSocial -> [String]
-nombresDeUsuarios = undefined
+nombresDeUsuarios RS = nombresDeUsuariosAux (usuarios RS)
+
+nombresDeUsuariosAux:: [Usuario] -> [String]
+nombresDeUsuariosAux usus |  usus == [] = []
+                          |  otherwise = nombreDeUsuario [head usus] ++ nombresDeUsuariosAux (tail usus)
+
 
 -- describir qué hace la función: .....
 amigosDe :: RedSocial -> Usuario -> [Usuario]
-amigosDe = undefined
+amigosDe RS usu = amigosDeAux (relaciones RS) usu
+
+amigosDeAux:: [Relacion] -> Usuario -> [Usuario]
+amigosDeAux rel usu | rel == [] = []
+                    | fst n == usu = snd n ++ amigosDeAux (tail rel) usu
+                    | snd n == usu = fst n ++ amigosDeAux (tail rel) usu
+                    | otherwise = amigosDeAux (tail rel) usu
+                    where n = head rel
+                    
 
 -- describir qué hace la función: .....
 cantidadDeAmigos :: RedSocial -> Usuario -> Int
-cantidadDeAmigos = undefined
+cantidadDeAmigos RS usu = longitud (amigosDe RS usu) 
 
--- describir qué hace la función: .....
+longitud:: (Eq t)  => [t] -> Int
+longitud [] = 0
+longitud (_:xs) = 1 + longitud xs 
+
+-- describir qué hace la función: ..... 
 usuarioConMasAmigos :: RedSocial -> Usuario
 usuarioConMasAmigos = undefined
 
