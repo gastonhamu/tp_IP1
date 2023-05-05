@@ -133,8 +133,24 @@ leGustanTodas usu pubs | pubs == [] = True
 
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos = undefined
+existeSecuenciaDeAmigos RS usu1 usu2 | sonAmigos RS usu1 usu2 = True
+                                     | otherwise = esda_Aux RS usu2 (amigosDe usu1) [usu1]
 
 
-esda_Aux :: [Relacion] -> Usuario -> Usuario
-esda_Aux relaciones usu1 usu2 | existeEn relaciones (usu1, usu2) || existeEn relaciones (usu2, usu1) = True
+esda_Aux :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
+esda_Aux RS usu2 usuList usuYaTest | usuList == [] = False
+                                   | existeEn usuYaTest usu1 = esda_Aux RS usu2 (tail usuList) usuYaTest
+                                   | sonAmigos RS usu1 usu2 = True
+                                   | otherwise = susAmigosTest RS usu2 (amigosDe usu1) (usu1 ++ usuYaTest) || esda_Aux RS usu2 (tail usuList) (usu1 ++ usuYaTest)
+                                   where usu1 = head usuList
+
+susAmigosTest :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
+susAmigosTest RS usu2 usuList usuYaTest | usuList == [] = False
+                                        | existeEn usuYaTest usu1 = esda_Aux RS usu2 (tail usuList) usuYaTest
+                                        | sonAmigos RS usu1 usu2 = True
+                                        | otherwise = susAmigosTest RS usu2 (amigosDe usu1) (usu1 ++ usuYaTest) || esda_Aux RS usu2 (tail usuList) (usu1 ++ usuYaTest)
+                                        where usu1 = head usuList
+                                   
+
+sonAmigos :: RedSocial -> Usuario -> Usuario -> Bool
+sonAmigos RS usu1 usu2 = existeEn (relaciones RS) (usu1, usu2) || existeEn (relaciones RS) (usu2, usu1) 
