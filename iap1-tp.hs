@@ -66,27 +66,70 @@ longitud (_:xs) = 1 + longitud xs
 
 -- describir qué hace la función: ..... 
 usuarioConMasAmigos :: RedSocial -> Usuario
-usuarioConMasAmigos = undefined
+usuarioConMasAmigos RS = usuarioConMasAmigosAux (head (usuarios RS)) (tail (usuarios RS)) 
+
+usuarioConMasAmigosAux:: Usuario -> [Usuario] -> Usuario
+usuarioConMasAmigosAux usu usuList | usuList == [] = usu
+                                   | cantidadDeAmigos usu >= cantidadDeAmigos siguiente = usuarioConMasAmigosAux usu (tail usuList)
+                                   | otherwise = usuarioConMasAmigosAux siguiente (tail usuList)
+                                   where siguiente = head usuList
 
 -- describir qué hace la función: .....
 estaRobertoCarlos :: RedSocial -> Bool
-estaRobertoCarlos = undefined
+estaRobertoCarlos RS = cantidadDeAmigos (usuarioConMasAmigos RS) > 1000000
 
 -- describir qué hace la función: .....
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
-publicacionesDe = undefined
+publicacionesDe RS usu = publicacionesDeAux (Publicacion RS) usu
+
+publicacionesDeAux :: [Publicacion] -> Usuario -> [Publicacion]
+publicacionesDeAux pubs usu | pubs == [] = []
+                            | fst (head pubs) == usu = head pubs ++ publicacionesDeAux (tail pubs) usu
+                            | otherwise = publicacionesDeAux (tail pubs) usu
 
 -- describir qué hace la función: .....
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
-publicacionesQueLeGustanA = undefined
+publicacionesQueLeGustanA RS usu = pqlga_Aux usu (publicaciones RS)
+
+pqlga_Aux :: Usuario -> [Publicacion] -> [Publicacion]
+pqlga_Aux usu pubs | pubs == [] = []
+                   | existeEn mgs usu = pub1 ++ pqlga_Aux usu (tail pubs)
+                   | otherwise = pqlga_Aux usu (tail pubs)
+                   where mgs = tercero pub1, pub1 = head pubs
+
+existeEn :: (Eq t) => [t] -> t -> Bool
+existeEn list obj | list == [] = False
+                  | head list == obj = True
+                  | otherwise = existeEn (tail list) obj
+
+tercero:: (a,b,c) -> c
+tercero (_,_,c) = c
 
 -- describir qué hace la función: .....
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
-lesGustanLasMismasPublicaciones = undefined
+lesGustanLasMismasPublicaciones RS usu1 usu2 = lglmp_Aux (publicaciones RS) usu1 usu2
+
+lglmp_Aux :: [Publicacion] -> Usuario -> Usuario -> Bool
+lglmp_Aux pubs usu1 usu2 | pubs == [] = True
+                         | existeEn mgs usu1 == existeEn mgs usu2 = lglmp_Aux (tail pubs) usu1 usu2
+                         | otherwise = False
+                         where mgs = tercero pub1, pub1 = head pubs
 
 -- describir qué hace la función: .....
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
-tieneUnSeguidorFiel = undefined
+tieneUnSeguidorFiel RS usu = tieneUnSeguidorFielAux RS tercero (head (publicacionesDe RS usu)) usu
+
+tieneUnSeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
+tieneUnSeguidorFielAux RS mgs usu | mgs == [] = False
+                                  | head mgs == usu = tieneUnSeguidorFielAux RS (tail mgs) usu
+                                  | leGustanTodas (head mgs) (tail(publicacionesDe RS usu)) = True
+                                  | otherwise = tieneUnSeguidorFielAux RS (tail mgs) usu
+                                   
+leGustanTodas :: Usuario -> [Publicacion] -> Bool
+leGustanTodas usu pubs | pubs == [] = True
+                       | existeEn mgs usu = leGustanTodas usu (tail pubs)
+                       | otherwise = False
+                       where mgs = tercero pub1, pub1 = head pubs
 
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
