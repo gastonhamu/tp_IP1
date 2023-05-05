@@ -148,7 +148,7 @@ susAmigosTest :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
 susAmigosTest RS usu2 usuList usuYaTest | usuList == [] = False
                                         | existeEn usuYaTest usu1 = esda_Aux RS usu2 (tail usuList) usuYaTest
                                         | sonAmigos RS usu1 usu2 = True
-                                        | otherwise = susAmigosTest RS usu2 (amigosDe usu1) (usu1 ++ usuYaTest) || esda_Aux RS usu2 (tail usuList) (usu1 ++ usuYaTest)
+                                        | otherwise = susAmigosTest RS usu2 (amigosDe usu1) (usu1 ++ usuYaTest) || susAmigosTest RS usu2 (tail usuList) (usu1 ++ usuYaTest)
                                         where usu1 = head usuList
                                    
 
