@@ -134,3 +134,7 @@ leGustanTodas usu pubs | pubs == [] = True
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
 existeSecuenciaDeAmigos = undefined
+
+
+esda_Aux :: [Relacion] -> Usuario -> Usuario
+esda_Aux relaciones usu1 usu2 | existeEn relaciones (usu1, usu2) || existeEn relaciones (usu2, usu1) = True
