@@ -151,10 +151,11 @@ agrAmigos :: RedSocial -> [Usuario] -> [Usuario]
 agrAmigos RS usuList | usuList == [] = []
                      | otherwise = amigosDe (head usuList) ++ (head usuList) ++ agrAmigos RS (tail usuList)
 
+
 sacarRepes :: (Eq t) => [t] -> [t]
-sacarRepes List | existeEn (tail List) (head List) = sacarRepes (tail List)
+sacarRepes List | List == [] = []
+                | existeEn (tail List) (head List) = sacarRepes (tail List)
                 | otherwise = (head List) ++ sacarRepes (tail List)
-                
 {-
 esda_Aux :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
 esda_Aux RS usu2 usuList usuYaTest | usuList == [] = False
