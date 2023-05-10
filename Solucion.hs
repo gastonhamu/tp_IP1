@@ -120,13 +120,12 @@ tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
 tieneUnSeguidorFiel RS usu = SeguidorFielAux RS (tercero (head (publicacionesDe RS usu))) usu
 
 SeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
-SeguidorFielAux RS mgs usu | mgs == [] = []
-                            | primero == usu = SeguidorFielAux RS (tail mgs) usu2
-                            | longitud (filtrarPubsUsu (publicacionesQueLeGustanA RS primero) usu) == longitud (publicacionesDe RS usu) = True
-                            | otherwise = SeguidorFielAux RS (tail mgs) usu
-                            where primero = head mgs
-
-
+SeguidorFielAux RS mgs usu | mgs == [] = False
+                           | primero == usu = SeguidorFielAux RS (tail mgs) usu
+                           | longitud (filtrarPubsUsu (publicacionesQueLeGustanA RS primero) usu) == longitud (publicacionesDe RS usu) = True
+                           | otherwise = SeguidorFielAux RS (tail mgs) usu
+                           where primero = head mgs
+                           
 {-SeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
 SeguidorFielAux RS mgs usu | mgs == [] = False
                                   | head mgs == usu = SeguidorFielAux RS (tail mgs) usu
@@ -141,8 +140,7 @@ leGustanTodas usu pubs | pubs == [] = True
 -}
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos RS usu1 usu2 | sonAmigos RS usu1 usu2 = True
-                                     | otherwise = esda_Aux RS usu2 (amigosDe usu1) [usu1]
+existeSecuenciaDeAmigos RS usu1 usu2  = hayVinculo RS [usu1] usu2 0
 
 hayVinculo :: RedSocial -> [Usuario] -> Usuario -> Integer -> Bool
 hayVinculo RS usuList usu2 cantVieja | longitud usuList == cantVieja = False
@@ -156,7 +154,7 @@ agrAmigos RS usuList | usuList == [] = []
 sacarRepes :: (Eq t) => [t] -> [t]
 sacarRepes List | existeEn (tail List) (head List) = sacarRepes (tail List)
                 | otherwise = (head List) ++ sacarRepes (tail List)
-
+                
 {-
 esda_Aux :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
 esda_Aux RS usu2 usuList usuYaTest | usuList == [] = False
