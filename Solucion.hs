@@ -200,7 +200,8 @@ agrAmigos RS usuList | usuList == [] = []
                      | otherwise = amigosDe (head usuList) ++ (head usuList) ++ agrAmigos RS (tail usuList)
 
 sacarRepes :: (Eq t) => [t] -> [t]
-sacarRepes List | existeEn (tail List) (head List) = sacarRepes (tail List)
+sacarRepes List | List == [] = []
+                | existeEn (tail List) (head List) = sacarRepes (tail List)
                 | otherwise = (head List) ++ sacarRepes (tail List)
 
 {- Para este ejercicio, creamos algunas funciones auxiliares con funciones específicas y puntuales. La primer funcion auxiliar recibe la red 
@@ -216,11 +217,14 @@ que llegar, entonces devuelve True.
 El otro caso posible es que hay que agregar a los amigos de las personas que ya tenemos, para eso nos encargamos de agregar a los amigos
 y de sacar a los repetidos, sumado a que hay que encargarnos de cambiar la cantidad vieja de elementos en la lista por la actual.
 
-Para agregar amigos, recorremos la lista para agregar amigos, sin dejar afuera a nadie, vamos recursivamente por la lista, agregando a los 
-amigos de todos en la lista, incluyendose a sí mismo.
+Para agrAmigos, recorremos la lista de amigos que ya tenemos, sin dejar afuera a nadie, vamos recursivamente por la lista, agregando a los 
+amigos de todos en la lista, incluyendose a sí mismo. 
 
-Para eliminar a los repetidos, va elemento por elemento fijandose si existe en la tail de la lista, si existe no se agrega, sino, se agrega.
--}
+Para eliminar a los repetidos, utilizamos la función sacarRepes en donde vemos como recibe una lista de tipo genérico, en la que agarramos
+el primer elemento, revisamos si esta en el resto de la fila (importante que sea el tail porque sino él seguro aparecería en la posición 
+original y si no lo agregamos por eso, puede que lo perdamos) y si aparece en el resto, no lo agregamos a la lista. Si el elemento no esta en
+el resto de la lista, no se repite de vuelta, significa que debemos agregarlo, entonces lo agrega a la lista que vamos a devolver, formada de 
+manera recursiva. -}
 
 {-
 esda_Aux :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
