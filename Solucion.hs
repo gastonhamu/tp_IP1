@@ -43,7 +43,7 @@ nombresDeUsuarios rs = nombresDeUsuariosAux (usuarios rs)
 
 nombresDeUsuariosAux:: [Usuario] -> [String]
 nombresDeUsuariosAux usus |  usus == [] = []
-                          |  otherwise = nombreDeUsuario (head usus) nombresDeUsuariosAux (tail usus)
+                          |  otherwise = nombreDeUsuario (head usus) : nombresDeUsuariosAux (tail usus)
 
 {- Para este ejercicio, creamos una función auxiliar que recibe la lista de todos los usuarios de la red, esta va recorriendo toda la lista
 y va sumando a la lista que devuelve solo los nombres usuarios usando la recursividad, teniendo solo una lista vacía al final y en las
