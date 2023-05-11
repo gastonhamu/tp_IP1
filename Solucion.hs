@@ -43,7 +43,7 @@ nombresDeUsuarios rs = nombresDeUsuariosAux (usuarios rs)
 
 nombresDeUsuariosAux:: [Usuario] -> [String]
 nombresDeUsuariosAux usus |  usus == [] = []
-                          |  otherwise = [nombreDeUsuario (head usus) nombresDeUsuariosAux (tail usus)
+                          |  otherwise = [nombreDeUsuario (head usus) : nombresDeUsuariosAux (tail usus)
 
 -- describir qué hace la función: .....
 amigosDe :: RedSocial -> Usuario -> [Usuario]
