@@ -1,3 +1,5 @@
+module Solucion where
+
 -- Completar con los datos del grupo
 --
 -- Nombre de Grupo: Maquinas
@@ -37,28 +39,26 @@ likesDePublicacion (_, _, us) = us
 -- Ejercicios
 
 nombresDeUsuarios :: RedSocial -> [String]
-nombresDeUsuarios RS = nombresDeUsuariosAux (usuarios RS)
+nombresDeUsuarios rs = nombresDeUsuariosAux (usuarios rs)
 
 nombresDeUsuariosAux:: [Usuario] -> [String]
 nombresDeUsuariosAux usus |  usus == [] = []
-                          |  otherwise = nombreDeUsuario [head usus] ++ nombresDeUsuariosAux (tail usus)
-
+                          |  otherwise = [nombreDeUsuario (head usus) nombresDeUsuariosAux (tail usus)
 
 -- describir qué hace la función: .....
 amigosDe :: RedSocial -> Usuario -> [Usuario]
-amigosDe RS usu = amigosDeAux (relaciones RS) usu
+amigosDe rs usu = amigosDeAux (relaciones rs) usu
 
 amigosDeAux:: [Relacion] -> Usuario -> [Usuario]
 amigosDeAux rel usu | rel == [] = []
-                    | fst n == usu = snd n ++ amigosDeAux (tail rel) usu
-                    | snd n == usu = fst n ++ amigosDeAux (tail rel) usu
+                    | fst n == usu = snd n : amigosDeAux (tail rel) usu
+                    | snd n == usu = fst n : amigosDeAux (tail rel) usu
                     | otherwise = amigosDeAux (tail rel) usu
                     where n = head rel
                     
-
 -- describir qué hace la función: .....
 cantidadDeAmigos :: RedSocial -> Usuario -> Int
-cantidadDeAmigos RS usu = longitud (amigosDe RS usu) 
+cantidadDeAmigos rs usu = longitud (amigosDe rs usu) 
 
 longitud:: (Eq t)  => [t] -> Int
 longitud [] = 0
@@ -66,36 +66,42 @@ longitud (_:xs) = 1 + longitud xs
 
 -- describir qué hace la función: ..... 
 usuarioConMasAmigos :: RedSocial -> Usuario
-usuarioConMasAmigos RS = usuarioConMasAmigosAux (head (usuarios RS)) (tail (usuarios RS)) 
+usuarioConMasAmigos rs = usuarioConMasAmigosAux rs (head (usuarios rs)) (tail (usuarios rs)) 
 
-usuarioConMasAmigosAux:: Usuario -> [Usuario] -> Usuario
-usuarioConMasAmigosAux usu usuList | usuList == [] = usu
-                                   | cantidadDeAmigos usu >= cantidadDeAmigos siguiente = usuarioConMasAmigosAux usu (tail usuList)
-                                   | otherwise = usuarioConMasAmigosAux siguiente (tail usuList)
-                                   where siguiente = head usuList
+usuarioConMasAmigosAux:: RedSocial -> Usuario -> [Usuario] -> Usuario
+usuarioConMasAmigosAux rs usu usuList | usuList == [] = usu
+                                      | cantidadDeAmigos rs usu >= cantidadDeAmigos rs siguiente = usuarioConMasAmigosAux rs usu (tail usuList)
+                                      | otherwise = usuarioConMasAmigosAux rs siguiente (tail usuList)
+                                       where siguiente = head usuList
 
 -- describir qué hace la función: .....
 estaRobertoCarlos :: RedSocial -> Bool
-estaRobertoCarlos RS = cantidadDeAmigos (usuarioConMasAmigos RS) > 1000000
+estaRobertoCarlos rs = cantidadDeAmigos rs (usuarioConMasAmigos rs) > 1000000
 
 -- describir qué hace la función: .....
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
-publicacionesDe RS usu = filtrarPubsUsu (Publicacion RS) usu
+publicacionesDe rs usu = filtrarPubsUsu (publicaciones rs) usu
 
 filtrarPubsUsu :: [Publicacion] -> Usuario -> [Publicacion]
 filtrarPubsUsu pubs usu | pubs == [] = []
-                                     | fst (head pubs) == usu = head pubs ++ filtrarPubsUsu (tail pubs) usu
-                                     | otherwise = filtrarPubsUsu (tail pubs) usu
+                        | primerElemento pub1 == usu = pub1 : filtrarPubsUsu (tail pubs) usu
+                        | otherwise = filtrarPubsUsu (tail pubs) usu
+                         where pub1 = head pubs
+
+
+primerElemento:: (a,b,c) -> a
+primerElemento (a,_,_) = a
 
 -- describir qué hace la función: .....
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
-publicacionesQueLeGustanA RS usu = pqlga_Aux usu (publicaciones RS)
+publicacionesQueLeGustanA rs usu = pqlga_Aux usu (publicaciones rs)
 
 pqlga_Aux :: Usuario -> [Publicacion] -> [Publicacion]
 pqlga_Aux usu pubs | pubs == [] = []
-                   | existeEn mgs usu = pub1 ++ pqlga_Aux usu (tail pubs)
+                   | existeEn mgs usu = pub1 : pqlga_Aux usu (tail pubs)
                    | otherwise = pqlga_Aux usu (tail pubs)
-                   where mgs = tercero pub1, pub1 = head pubs
+                   where mgs = tercero pub1
+                         pub1 = head pubs
 
 existeEn :: (Eq t) => [t] -> t -> Bool
 existeEn list obj | list == [] = False
@@ -107,70 +113,41 @@ tercero (_,_,c) = c
 
 -- describir qué hace la función: .....
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
-lesGustanLasMismasPublicaciones RS usu1 usu2 = lglmp_Aux (publicaciones RS) usu1 usu2
+lesGustanLasMismasPublicaciones rs usu1 usu2 = lglmp_Aux (publicaciones rs) usu1 usu2
 
 lglmp_Aux :: [Publicacion] -> Usuario -> Usuario -> Bool
 lglmp_Aux pubs usu1 usu2 | pubs == [] = True
                          | existeEn mgs usu1 == existeEn mgs usu2 = lglmp_Aux (tail pubs) usu1 usu2
                          | otherwise = False
-                         where mgs = tercero pub1, pub1 = head pubs
+                         where mgs = tercero pub1
+                               pub1 = head pubs
 
 -- describir qué hace la función: .....
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
-tieneUnSeguidorFiel RS usu = SeguidorFielAux RS (tercero (head (publicacionesDe RS usu))) usu
+tieneUnSeguidorFiel rs usu = seguidorFielAux rs (tercero (head (publicacionesDe rs usu))) usu
 
-SeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
-SeguidorFielAux RS mgs usu | mgs == [] = False
-                           | primero == usu = SeguidorFielAux RS (tail mgs) usu
-                           | longitud (filtrarPubsUsu (publicacionesQueLeGustanA RS primero) usu) == longitud (publicacionesDe RS usu) = True
-                           | otherwise = SeguidorFielAux RS (tail mgs) usu
+seguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
+seguidorFielAux rs mgs usu | mgs == [] = False
+                           | primero == usu = seguidorFielAux rs (tail mgs) usu
+                           | longitud (filtrarPubsUsu (publicacionesQueLeGustanA rs primero) usu) == longitud (publicacionesDe rs usu) = True
+                           | otherwise = seguidorFielAux rs (tail mgs) usu
                            where primero = head mgs
-                           
-{-SeguidorFielAux :: RedSocial -> [Usuario] -> Usuario -> Bool
-SeguidorFielAux RS mgs usu | mgs == [] = False
-                                  | head mgs == usu = SeguidorFielAux RS (tail mgs) usu
-                                  | leGustanTodas (head mgs) (tail(publicacionesDe RS usu)) = True
-                                  | otherwise = SeguidorFielAux RS (tail mgs) usu
-                                   
-leGustanTodas :: Usuario -> [Publicacion] -> Bool
-leGustanTodas usu pubs | pubs == [] = True
-                       | existeEn mgs usu = leGustanTodas usu (tail pubs)
-                       | otherwise = False
-                       where mgs = tercero pub1, pub1 = head pubs
--}
+
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos RS usu1 usu2  = hayVinculo RS [usu1] usu2 0
+existeSecuenciaDeAmigos rs usu1 usu2  = hayVinculo rs [usu1] usu2 0
 
-hayVinculo :: RedSocial -> [Usuario] -> Usuario -> Integer -> Bool
-hayVinculo RS usuList usu2 cantVieja | longitud usuList == cantVieja = False
+hayVinculo :: RedSocial -> [Usuario] -> Usuario -> Int -> Bool
+hayVinculo rs usuList usu2 cantVieja | longitud usuList == cantVieja = False
                                      | existeEn usuList usu2 = True
-                                     | otherwise = hayVinculo RS (sacarRepes (agrAmigos RS usuList)) usu2 (longitud usuList)
+                                     | otherwise = hayVinculo rs (sacarRepes (agrAmigos rs usuList)) usu2 (longitud usuList)
 
 agrAmigos :: RedSocial -> [Usuario] -> [Usuario]
-agrAmigos RS usuList | usuList == [] = []
-                     | otherwise = amigosDe (head usuList) ++ (head usuList) ++ agrAmigos RS (tail usuList)
-
+agrAmigos rs usuList | usuList == [] = []
+                     | otherwise = usu1: amigosDe rs usu1 ++ agrAmigos rs (tail usuList)
+                     where usu1 = head usuList
 
 sacarRepes :: (Eq t) => [t] -> [t]
-sacarRepes List | List == [] = []
-                | existeEn (tail List) (head List) = sacarRepes (tail List)
-                | otherwise = (head List) ++ sacarRepes (tail List)
-{-
-esda_Aux :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
-esda_Aux RS usu2 usuList usuYaTest | usuList == [] = False
-                                   | existeEn usuYaTest usu1 = esda_Aux RS usu2 (tail usuList) usuYaTest
-                                   | sonAmigos RS usu1 usu2 = True
-                                   | otherwise = susAmigosTest RS usu2 (amigosDe usu1) (usu1 ++ usuYaTest) || esda_Aux RS usu2 (tail usuList) (usu1 ++ usuYaTest)
-                                   where usu1 = head usuList
-
-susAmigosTest :: RedSocial -> Usuario -> [Usuario] -> [Usuario] -> Bool
-susAmigosTest RS usu2 usuList usuYaTest | usuList == [] = False
-                                        | existeEn usuYaTest usu1 = esda_Aux RS usu2 (tail usuList) usuYaTest
-                                        | sonAmigos RS usu1 usu2 = True
-                                        | otherwise = susAmigosTest RS usu2 (amigosDe usu1) (usu1 ++ usuYaTest) || susAmigosTest RS usu2 (tail usuList) (usu1 ++ usuYaTest)
-                                        where usu1 = head usuList
-                                   
-
-sonAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-sonAmigos RS usu1 usu2 = existeEn (relaciones RS) (usu1, usu2) || existeEn (relaciones RS) (usu2, usu1) -}
+sacarRepes list | list == [] = []
+                | existeEn (tail list) (head list) = sacarRepes (tail list)
+                | otherwise = [head list] ++ sacarRepes (tail list)
