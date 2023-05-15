@@ -87,3 +87,30 @@ usuariosB = [usuario1, usuario2, usuario3, usuario5]
 relacionesB = [relacion1_2, relacion2_3]
 publicacionesB = [publicacion1_3, publicacion1_4, publicacion1_5, publicacion3_1, publicacion3_2, publicacion3_3]
 redB = (usuariosB, relacionesB, publicacionesB)
+
+
+usuarioC_1=(1, "Federico")
+usuarioC_2=(2, "Gaston")
+usuarioC_3=(3, "Santiago")
+usuarioC_4=(4, "Dante")
+usuarioC_5=(5, "Tatiana")
+usuarioC_6=(6, "Martin")
+usuarioC_7=(7, "Felipe")
+usuarioC_8=(8, "Juan")
+usuarioC_9=(9, "Lucas")
+usuariosC = [usuarioC_1, usuarioC_2, usuarioC_3, usuarioC_4, usuarioC_5, usuarioC_6, usuarioC_7, usuarioC_8, usuarioC_9]
+
+
+relacionC_19 =(usuarioC_1, usuarioC_9)
+relacionC_29 =(usuarioC_2, usuarioC_9)
+relacionC_23 =(usuarioC_2, usuarioC_3)
+relacionC_24 =(usuarioC_4, usuarioC_2)
+relacionC_25 =(usuarioC_5, usuarioC_2)
+relacionC_34 =(usuarioC_4, usuarioC_3)
+relacionC_35 =(usuarioC_3, usuarioC_5)
+relacionC_45 =(usuarioC_4, usuarioC_5)
+relacionC_67 =(usuarioC_7, usuarioC_6)
+relacionC_68 =(usuarioC_6, usuarioC_8)
+relacionC_78 =(usuarioC_8, usuarioC_6)
+
+relacionesC = [relacionC_19, relacionC_29, relacionC_23, relacionC_24, relacionC_25, relacionC_34, relacionC_35, relacionC_45, relacionC_67, relacionC_68, relacionC_78]
