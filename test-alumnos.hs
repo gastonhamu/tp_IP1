@@ -32,7 +32,55 @@ tests = test [
 
     " existeSecuenciaDeAmigos 2" ~: (existeSecuenciaDeAmigos redA usuario1 usuario6) ~?= False,
 
-    " existeSecuenciaDeAmigos 3" ~: (existeSecuenciaDeAmigos redA usuario1 usuario5) ~?= False
+    " existeSecuenciaDeAmigos 3" ~: (existeSecuenciaDeAmigos redA usuario1 usuario5) ~?= False,
+
+    " nombresDeUsuarios C_1" ~: (nombresDeUsuarios redC) ~?= ["Federico", "Gaston", "Santiago", "Dante", "Tatiana", "Martin", "Felipe", "Juan", "Lucas"],
+
+    " amigosDe C_1" ~: (amigosDe redC usuarioC_1) ~?= [usuarioC_9],
+
+    " amigosDe C_2" ~: (amigosDe redC usuarioC_2) ~?= [usuarioC_9, usuarioC_3, usuarioC_4, usuarioC_5],
+
+    " amigosDe C_4" ~: (amigosDe redC usuarioC_4) ~?= [usuarioC_2, usuarioC_3, usuarioC_5],
+
+    " amigosDe C_7" ~: (amigosDe redC usuarioC_7) ~?= [usuarioC_6, usuarioC_8],
+
+    " cantidadDeAmigos C_1" ~: (cantidadDeAmigos redC usuarioC_1) ~?= 1,
+
+    " cantidadDeAmigos C_2" ~: (cantidadDeAmigos redC usuarioC_2) ~?= 4,
+
+    " cantidadDeAmigos C_4" ~: (cantidadDeAmigos redC usuarioC_4) ~?= 3,
+
+    " cantidadDeAmigos C_7" ~: (cantidadDeAmigos redC usuarioC_7) ~?= 2,
+
+    " usuarioConMasAmigos C_1" ~: (usuarioConMasAmigos redC) ~?= usuarioC_2,
+
+    " estaRobertoCarlos C_1" ~: (estaRobertoCarlos redC) ~?= False,
+
+    " publicacionesDe C_1" ~: (publicacionesDe redC usuarioC_1) ~?= [publicacionC_1, publicacionC_2, publicacionC_3, publicacionC_4], 
+
+    " publicacionesDe C_2" ~: (publicacionesDe redC usuarioC_2) ~?= [publicacionC_5], 
+
+    " publicacionesDe C_3" ~: (publicacionesDe redC usuarioC_3) ~?= [],
+
+    " publicacionesQueLeGustanA C_1" ~: (publicacionesQueLeGustanA redC usuarioC_1) ~?= [],
+ 
+    " publicacionesQueLeGustanA C_2" ~: (publicacionesQueLeGustanA redC usuarioC_2) ~?= [publicacionC_1, publicacionC_2, publicacionC_3, publicacionC_4, publicacionC_5],
+
+    " publicacionesQueLeGustanA C_4" ~: (publicacionesQueLeGustanA redC usuarioC_4) ~?= [publicacionC_2, publicacionC_4],
+
+    " lesGustanLasMismasPublicaciones C_48" ~: (lesGustanLasMismasPublicaciones redC usuarioC_4 usuarioC_8) ~?= False,
+
+    " lesGustanLasMismasPublicaciones C_49" ~: (lesGustanLasMismasPublicaciones redC usuarioC_4 usuarioC_9) ~?= True,
+
+    " tieneUnSeguidorFiel C_1" ~: (tieneUnSeguidorFiel redC usuarioC_1) ~?= True,
+
+    " tieneUnSeguidorFiel C_2" ~: (tieneUnSeguidorFiel redC usuarioC_2) ~?= False,
+
+    " existeSecuenciaDeAmigos C_15" ~: (existeSecuenciaDeAmigos redC usuarioC_1 usuarioC_5) ~?= True,
+
+    " existeSecuenciaDeAmigos C_25" ~: (existeSecuenciaDeAmigos redC usuarioC_2 usuarioC_5) ~?= True,
+
+    " existeSecuenciaDeAmigos C_65" ~: (existeSecuenciaDeAmigos redC usuarioC_6 usuarioC_5) ~?= False
  ]
 
 expectAny actual expected = elem actual expected ~? ("expected any of: " ++ show expected ++ "\n but got: " ++ show actual)
@@ -111,6 +159,18 @@ relacionC_35 =(usuarioC_3, usuarioC_5)
 relacionC_45 =(usuarioC_4, usuarioC_5)
 relacionC_67 =(usuarioC_7, usuarioC_6)
 relacionC_68 =(usuarioC_6, usuarioC_8)
-relacionC_78 =(usuarioC_8, usuarioC_6)
+relacionC_78 =(usuarioC_8, usuarioC_7)
 
 relacionesC = [relacionC_19, relacionC_29, relacionC_23, relacionC_24, relacionC_25, relacionC_34, relacionC_35, relacionC_45, relacionC_67, relacionC_68, relacionC_78]
+
+publicacionC_1=(usuarioC_1, "Tomando Cafe", [usuarioC_2])
+publicacionC_2=(usuarioC_1, "Se me cayò el cafe :(", [usuarioC_2, usuarioC_3, usuarioC_4, usuarioC_5, usuarioC_6, usuarioC_7, usuarioC_8, usuarioC_9])
+publicacionC_3=(usuarioC_1, "El perro tomo el cafe, tengo miedo", [usuarioC_2, usuarioC_8])
+publicacionC_4=(usuarioC_1, "El veterinario me dijo que no pasa nada :)", [usuarioC_2, usuarioC_4, usuarioC_9])
+
+
+publicacionC_5=(usuarioC_2, "Acabo de ver lo del perro, F", [usuarioC_2])
+
+publicacionesC = [publicacionC_1, publicacionC_2, publicacionC_3, publicacionC_4, publicacionC_5]
+
+redC = (usuariosC, relacionesC, publicacionesC)
